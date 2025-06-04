@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <inttypes.h>
+#include <string.h>
+#include <stdlib.h>
+//7`75`53`3 1`1`66`44`22`00
+
+// 0100 0001
+char test = 65; // char
+
+// ¬ 7
+
+uint16_t encode (char byte) {
+    uint16_t aux=0;
+    
+    aux|= ( (( (byte>>7) & 1) << 1) | ( (~byte >>7) & 1 ) ) << 14 ;
+    aux|= ( (( (byte>>5) & 1) << 1) | ( (~byte >>5) & 1 ) ) << 12 ;
+    aux|= ( (( (byte>>3) & 1) << 1) | ( (~byte >>3) & 1 ) ) << 10 ;
+    aux|= ( (( (byte>>1) & 1) << 1) | ( (~byte >>1) & 1 ) ) << 8 ;
+    
+    aux|= ( (( (byte>>6) & 1)) | ( (~byte >>6) & 1 ) << 1 ) << 6;
+    aux|= ( (( (byte>>4) & 1)) | ( (~byte >>4) & 1 ) << 1 ) << 4;
+    aux|= ( (( (byte>>2) & 1)) | ( (~byte >>2) & 1 ) << 1 ) << 2;
+    aux|= ( (( (byte>>0) & 1)) | ( (~byte >>0) & 1 ) << 1 ) << 0;
+    
+    return aux;
+}
+//
+//7`75`53`3 1`1`66`44`22`00
+
+char decode (uint16_t encode_byte) {
+    char byte = 0;
+    byte = ( (encode_byte>>15) & 1 )<<7 | ((encode_byte>>13) & 1 )<<5 | ((encode_byte>>11) & 1 )<<3 | ((encode_byte>>9) & 1 )<<1 | ((encode_byte>>6) & 1 )<<6 | ((encode_byte>>4) & 1 )<<4 | ((encode_byte>>2) & 1 )<<2 | ((encode_byte>>0) & 1 )<< 0;
+   return byte; 
+}
+
+char * encode_msg(char * msg) {
+    char * encode_msg = (char *) malloc(256);
+    int size = strlen(msg);
+    int index = 0;
+    uint16_t resultado = 0;
+    while (index < size) {
+        resultado = encode(msg[index]);
+        memcpy(encode_msg + index * 2, &resultado , 2);
+        index ++;
+    }
+    encode_msg[index*2] = 0;
+    return encode_msg;
+}
+
+char * decode_msg (char * encode_msg) {
+    char * msg = (char *) malloc(256);
+    int size = strlen(encode_msg);
+    int index = 0;
+    uint16_t encode_byte = 0;
+    while (index < size) {
+        memcpy(&encode_byte, encode_msg + index * 2, 2);
+        msg[index] = decode(encode_byte);
+        index++;
+    }
+    msg[index]=0;
+    return msg;
+}
+
+int main()
+{
+    uint16_t resultado = encode(test);
+    char test_resultado = decode(resultado);
+    
+    
+    
+    printf(" resultado: %c\n", test_resultado);
+
+    char msg[20] = "HOLA MUNDO";
+    char * test_msg = NULL;
+    test_msg = encode_msg(msg);
+    test_msg = decode_msg(test_msg);
+    
+    printf("%s", test_msg);
+    
+    free(test_msg);
+
+    return 0;
+}

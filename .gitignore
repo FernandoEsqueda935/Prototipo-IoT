@@ -1,0 +1,65 @@
+# ESP-IDF build output
+/build/
+/*.bin
+/*.elf
+/*.map
+/*.hex
+/*.log
+
+# CMake and Ninja files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# ESP-IDF configuration
+sdkconfig
+sdkconfig.old
+sdkconfig.defaults
+
+# ESP-IDF Python environment
+.env/
+.venv/
+env/
+venv/
+.python-version
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# ESP-IDF managed components
+managed_components/
+components/*/build/
+components/*/CMakeFiles/
+components/*/CMakeCache.txt
+
+# NVS partition tool output
+*.csv
+
+# Misc
+*.pyc
+__pycache__/
+*.swp
+*.swo
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Ignore generated headers
+*.d
+*.o
+*.a
+
+# Ignore flash images
+*.bin
+*.img
+
+# Ignore partition table
+partition_table/*.bin
+
+# Ignore generated protobuf files
+*.pb.c
+*.pb.h
